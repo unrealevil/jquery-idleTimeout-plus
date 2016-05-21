@@ -1,7 +1,7 @@
 {
   "name": "jquery-idleTimeout-plus",
-  "version": "0.5.0",
-  "description": "jQuery idle timeout plugin supporting keepAlive, multiple windows and bootstrap",
+  "version": "0.9.0",
+  "description": "jQuery idle timeout plugin supporting keepAlive, lockscreens, multiple windows and bootstrap",
   "main": "dist/jquery-idleTimeout-plus.js",
   "homepage": "https://github.com/LinearSoft/jquery-idleTimeout-plus",
   "bugs": "https://github.com/LinearSoft/jquery-idleTimeout-plus/issues",
@@ -22,6 +22,9 @@
     "bootstrap",
     "bootstrap 3",
     "jquery",
+    "lockscreen",
+    "lock screen",
+    "lock",
     "jquery-plugin",
     "ecosystem:jquery",
     "javascript",
@@ -31,10 +34,10 @@
   "devDependencies": {
     "del": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.7",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-strip-code": "^0.1.4",
-    "gulp-strip-debug": "^1.1.0",
     "gulp-strip-line": "0.0.1",
     "gulp-uglify": "^1.5.3"
   }
