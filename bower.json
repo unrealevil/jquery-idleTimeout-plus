@@ -1,0 +1,50 @@
+{
+  "name": "jquery-idleTimeout-plus",
+  "description": "User idle detector with session keep-alive, warning dialogs, lock screen and redirection with support for multiple windows and tabs.",
+  "main": "dist/jquery-idleTimeout-plus.js",
+  "authors": [
+    "Jason Abraham",
+    "<jason@linearsoft.com>"
+  ],
+  "license": "CC-BY-SA-3.0",
+  "keywords": [
+    "timeout",
+    "time-out",
+    "timer",
+    "idle",
+    "keepalive",
+    "keep-alive",
+    "session",
+    "bootstrap",
+    "bootstrap",
+    "3",
+    "jquery",
+    "lockscreen",
+    "lock",
+    "screen",
+    "lock",
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "javascript",
+    "multiple",
+    "windows",
+    "multiple",
+    "tabs"
+  ],
+  "homepage": "https://github.com/LinearSoft/jquery-idleTimeout-plus",
+  "moduleType": [
+    "globals",
+    "amd",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">1.7"
+  }
+}
