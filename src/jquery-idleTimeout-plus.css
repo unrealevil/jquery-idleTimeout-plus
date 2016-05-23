@@ -16,6 +16,8 @@
 
     top: 50%;
     left: 50%;
+    /*margin-top: -130px;*/
+    /*margin-left: -180px;*/
     transform: translate(-50%, -50%);
 
     cursor: auto;
@@ -58,6 +60,7 @@
 .jitp-lock-jqpanel #jitp-lock-pass {
     font-size: 1em;
 }
+
 
 .jitp-lock-jqpanel button {
     margin-top: 20px;

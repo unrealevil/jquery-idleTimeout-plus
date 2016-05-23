@@ -50,7 +50,7 @@
         warnTimeLimit:          180,                                // 3 Minutes
         warnCallback:           false,                              // Called when warning timer starts (wait dialog will only be shown if this returns true)
         warnContentCallback:    false,                              // Called for content of warning dialog box (SEE DOCUMENTATION!)
-        warnTitle:              'Session Timeout',
+        warnTitle:              'Session Timeout',                  // setting to null will remove the title bar
         warnMessage:            'Your session is about to expire!',
         warnStayAliveButton:    'Stay Connected',
         warnLogoutButton:       'Logout',
@@ -63,7 +63,7 @@
         lockHaltKeepAlive:          true,                       // Stop the keepAlive functionality durring the lock screen timeout
         lockCallback:               false,                      // Called when lock screen timer starts (lock screen will only be shown if this returns true)
         lockContentCallback:        false,                      // Called for content of lock screen (SEE DOCUMENTATION!)
-        lockPassCallback:           false,                      // Required if using any of the internal lock screen functions (this function returns true if the correct password is entered)
+        lockPassCallback:           false,                      // Required if using any of the internal lock screen functions (This accepts one param)
         lockTitle:                  null,                       // Lock title null=no title
         lockUsername:               'System User',              // Set to current user name (otherwise the internal lock screen will look crappy)
         lockMessage:                'Enter your password to unlock the screen',
@@ -71,6 +71,7 @@
         lockLogoutButton:           'Not {username} ?',         // This is actually an href link
         lockCountdownMessage:       'Auto-logout in: {timer}',
         lockBlockUiConfig:          {},                         // Customize the blockUI options
+        lockLoadActive:             false,                      // If true the lock screen is automatically started 
 
         //Auto-Url settings                     (NOTE: if a callback is defined auto url redirection will only occur if the callback returns true)
         redirectUrl:        '/timed-out',       //URL if no action is taken after the warning/lock screen timeout
@@ -93,10 +94,10 @@
 
     /* --strip_testing_begin-- */
     var testingConfig = {
-        idleTimeLimit:      3,                                         // 30 seconds for testing.
+        idleTimeLimit:      30,
         activityEvents:     'click keypress scroll wheel mousewheel',   // Remove mousemove
-        warnTimeLimit:      3,                                         // 20 seconds for testing
-        lockTimeLimit:      5400,
+        warnTimeLimit:      30,
+        lockTimeLimit:      60,
         keepAliveInterval:  10
     };
     /* --strip_testing_end-- */
@@ -169,7 +170,21 @@
         if(config.multiWindowSupport) dataStore = ($.initNamespaceStorage('jqueryIdleTimeoutPlus')).localStorage;
         else dataStore = {};
 
-        //--Start base processes
+        //--Check if we are already in lockdown
+        if(config.lockEnabled && (config.lockLoadActive || loadData('lockStartTime',-1) > 0)) {
+            initSubLock();
+        } else {
+            //--Initialize and start idle timer
+            storeData('logoutTriggered',false);
+            storeData('warningStartTime',-1);
+            storeData('lockStartTime',-1);
+            storeData('lastActivity',$.now());
+            startIdleTimer();
+            if (config.keepAliveInterval) {
+                startKeepSessionAlive();
+            }
+        }
+
         if (config.keepAliveInterval) {
             startKeepSessionAlive();
         }
@@ -180,17 +195,6 @@
         activityDetector();
         checkForIframes();  /* --strip_iframe-- */
 
-        //--Check if we are already in lockdown
-        if(config.lockEnabled && loadData('lockStartTime',-1) != -1) {
-            initSubLock();
-        } else {
-            //--Initialize and start idle timer
-            storeData('logoutTriggered',false);
-            storeData('warningStartTime',-1);
-            storeData('lockStartTime',-1);
-            storeData('lastActivity',$.now());
-            startIdleTimer();
-        }
         return true;
     };
 
@@ -216,6 +220,16 @@
     api.displayLockScreen = function () {
         console.log('displayLockScreen called');
         openLockScreen();
+    };
+
+    /**
+     * Initiates the full lock screen procedure (use this if you wish to lock immediately)
+     */
+    api.initLockScreen = function () {
+        console.log('displayLockScreen called');
+        stopIdleTimer();
+        stopWarningTimer();
+        initLock();
     };
 
     /**
@@ -291,6 +305,12 @@
             console.log('alternate document logout detected');
             return handleLogoutTrigger();
         }
+        //Check to see to see if lock initiated
+        if(loadData('lockStartTime',-1) != -1) {
+            stopIdleTimer();
+            return initSubLock();
+        }
+
         if($.now() >= idleTimeoutTime) {
             console.log('inactivity has exceeded the idleTimeLimit');
             stopIdleTimer();
@@ -508,8 +528,9 @@
             minWidth: 320,
             autoOpen: false,
             open: function () {
-                //hide the dialog's upper right corner "x" close button
-                $(this).closest('.ui-dialog').find('.ui-dialog-titlebar-close').hide();
+                //hide the dialog's title bar or the upper right corner "x" close button
+                if(config.warnTitle == null) $(this).closest('.ui-dialog').find('.ui-dialog-titlebar').hide();
+                else $(this).closest('.ui-dialog').find('.ui-dialog-titlebar-close').hide();
                 $(this).parent().find('button:nth-child(2)').focus(); //Focus StayAlive button
             }
         });
@@ -530,6 +551,9 @@
 
     function getWarningContentBootstrap() {
         console.log('getWarningContentBootstrap called');
+        var title = config.warnTitle ?
+        '<div class="modal-header"><h4 class="modal-title">' + config.warnTitle + '</h4></div>'
+            : '';
         var countdownMsg = config.warnCountdownMessage ?
         '<p>' + config.warnCountdownMessage.replace(/{timer}/g, '<span class="jitp-countdown-holder"></span>') + '</p>'
             : '';
@@ -544,9 +568,7 @@
             '<div class="modal fade" id="jitp-warn-display" data-backdrop="static" data-keyboard="false"> \
                 <div class="modal-dialog"> \
                     <div class="modal-content"> \
-                        <div class="modal-header"> \
-                            <h4 class="modal-title">' + config.warnTitle + '</h4> \
-                        </div> \
+                         ' + title + ' \
                         <div class="modal-body"> \
                             <p>' + config.warnMessage + '</p> \
                             ' + countdownMsg + ' \
@@ -610,7 +632,9 @@
     function initSubLock() {
         console.log('initSubLock called');
         if(config.lockHaltKeepAlive) stopKeepSessionAlive();
-        lockTimer = setInterval(checkLockTimeout, 500);
+        else if(config.keepAliveInterval) startKeepSessionAlive();
+        if(loadData('lockStartTime',-1) == -1) startLockTimer();  //Missing lockStartTime
+        else lockTimer = setInterval(checkLockTimeout, 500);
         openLockScreen();
     }
 
@@ -636,7 +660,7 @@
 
     function checkLockTimeout() {
         //Check to see if other windows/tabs have had a critical event
-        if (loadData('logoutTriggered') === true) {
+        if (loadData('logoutTriggered') == true) {
             console.log('alternate document logout detected');
             stopLockTimer();
             return handleLogoutTrigger();
@@ -650,6 +674,7 @@
         var lockTimeout = (loadData('lockStartTime') + config.lockTimeLimit)-1;
         if ($.now() >= lockTimeout) {
             stopLockTimer();
+            if (loadData('logoutTriggered') == true) return handleLogoutTrigger(); //Trying to prevent race conditions
             return handleRedirect();
         }
         //Update dialog if open
@@ -707,6 +732,13 @@
             onUnlockButton();
         });
 
+        if($('#jitp-lock-form').length) {
+            $('#jitp-lock-form').submit(function() {
+                onUnlockButton();
+                return false;
+            });
+        }
+
         updateLockScreen();
     }
 
@@ -742,7 +774,6 @@
     }
 
     function getLockContentJquery() {
-        //TODO: Make this less ugly of a form with only jQuery/jQueryUI and no external dependencies (any volunteers?)
         var title = config.lockTitle !== null ?
         '<header>' + config.lockTitle + '</header>'
             : '';
@@ -777,35 +808,45 @@
 
     function onUnlockButton() {
         console.log('onUnlockButton called');
-        if(!config.lockPassCallback($('#jitp-lock-pass').val())) {
-            console.log('Invalid password');
-            return;
-        }
-        rollbackLock();
+        config.lockPassCallback($('#jitp-lock-pass').val());
     }
 
     // -------------------------- Logout & Redirect --------------------------//
 
+    function stopIt() {
+        stopIdleTimer();
+        stopWarningTimer();
+        stopLockTimer();
+        //Dirty lockStartTime to prevent initSubLock kicking off
+        storeData('lockStartTime',-99);
+    }
+
     function handleLogout() {
+        console.log('handleLogout called');
         storeData('logoutTriggered',true);
+        stopIt();
         if(typeof config.logoutCallback == 'function') {
             if(!config.logoutCallback(config)) return; //Redirect only done on true return
         }
-        window.location = config.logoutUrl;
+        window.location.replace(config.logoutUrl);
     }
 
     function handleLogoutTrigger() {
+        console.log('handleLogoutTrigger called');
+        stopIt();
         if(typeof config.logoutAutoCallback == 'function') {
             if(!config.logoutAutoCallback(config)) return;
         }
-        window.location = config.logoutAutoUrl;
+        window.location.replace(config.logoutAutoUrl);
     }
 
     function handleRedirect() {
+        console.log('handleRedirect called');
+        stopIt();
         if(typeof config.redirectCallback == 'function') {
             if(!config.redirectCallback(config)) return;
         }
-        window.location.href = config.redirectUrl;
+        window.location.replace(config.redirectUrl);
     }
 
     /* --strip_iframe_begin-- */
