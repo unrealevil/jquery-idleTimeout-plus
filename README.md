@@ -1,6 +1,6 @@
 # jquery-idleTimeout-plus
 
-User idle detector with session keep-alive, warning dialogs, lock screen and redirection with support for multiple windows and tabs.
+User idle detector with session keep-alive, warning dialog, lock screen, url redirection and support for multiple windows and tabs.
 ### Features
 * Highly configurable
 * Multiple window/tab support
@@ -9,8 +9,6 @@ User idle detector with session keep-alive, warning dialogs, lock screen and red
 * Support for both jQueryUI and Bootstrap GUI frameworks
 * Modular code supports AMD/CommonJS
 * Attempts to mitigate race conditions with regards to auto logout (what I wouldn't give for cross-window JavaScript semaphores)
-
-Inspired by [Jill Elaine's jquery-idleTimeout](https://github.com/josebalius/jquery-idleTimeout) and [Orangehill's bootstrap-session-timeout](https://github.com/orangehill/bootstrap-session-timeout)
 
 ## Getting Started
 ### Installation
@@ -52,7 +50,7 @@ jQuery(document).ready(function() {
 
 ## Options
 
-#### Basic Options
+### Basic Options
 
 | Settings      |  Type  | Default                          | Descritption                  |
 |:--------------|:------:|:---------------------------------|:------------------------------|
@@ -62,14 +60,14 @@ jQuery(document).ready(function() {
 | warnMessage   | string | Your session is about to expire! | warning dialog message        |
 | redirectUrl   | string | /timed-out                       | Redirect URL for user timeout |
 
-#### Detailed Options
+### Detailed Options
 
 | Setting Name | &nbsp; |
 |:----|:----|
 |Type|Default Value|
 
 ---
-##### General Settings
+#### General Settings
 
 * Note: All callback functions receive the IdleTimeoutPlus config object as parameter.
 
@@ -99,7 +97,7 @@ Controls which [activity events](https://developer.mozilla.org/en-US/docs/Web/Re
 Setting to true enables Bootstrap 3 modals and themes
 
 ---
-##### Warning Settings
+#### Warning Settings
 
 | warnEnabled | &nbsp; |
 |:----|:----|
@@ -152,7 +150,7 @@ Text for the warning countdown message. _Setting this to null will remove the co
 Enable/disable the warning countdown bar.
 
 ---
-##### Timeout URL Settings
+#### Timeout URL Settings
 
 | redirectUrl | &nbsp; |
 |:----|:----|
@@ -170,7 +168,7 @@ URL the user is redirected to when clicking the "Logout" button.
 URL the user is redirected to when a logout occurs in another window. If null the `logoutUrl` value is used.  
 The purpose of this setting is to help avoid server-side logout race conditions.
 
-##### Timeout Callback Settings
+#### Timeout Callback Settings
 
 _Note: If a callback function is defined auto url redirection will only occur if the callback function returns true._
 
@@ -190,7 +188,7 @@ Called when the user clicks the "Logout" button
 Called when a logout occurs in another window.
 
 ---
-##### Session Keep-Alive Settings
+#### Session Keep-Alive Settings
 
 | keepAliveInterval | &nbsp; |
 |:----|:----|
@@ -213,7 +211,7 @@ Sets the desired AJAX query type: `GET` or `POST`.
 The data to send with the keep alive ping request.
 
 ---
-##### Lock Screen Settings
+#### Lock Screen Settings
 
 | lockEnabled | &nbsp; |
 |:----|:----|
@@ -288,7 +286,7 @@ Allows you to customize the BlockUI settings if necessary. See the [Custom Conte
 If set to true the lock screen is automatically started. See the [Special Situations](#special) section for more details.
 
 ---
-##### Lock Screen Settings
+#### Lock Screen Settings
 
 | iframesSupport | &nbsp; |
 |:----|:----|
@@ -310,11 +308,12 @@ of `config.lockUsername`.
 ```
 warnCountdownMessage: 'Redirecting in {timer}'
 lockCountdownMessage: '{timer} remaining until logout'
+lockLogoutButton: 'Hey! I'm not {username}! Log me out NOW!'
 ```
 ---
 
 ### Warning Content
-When providing custom content for the warning dialog you must use certain classes and element ids to ensure proper function.
+When providing custom content for the warning dialog you must the following classes and element ids to ensure proper function:
 
 | Element Id or Class           | Element Type | Description                                                              |
 |:------------------------------|:-------------|:-------------------------------------------------------------------------|
@@ -364,8 +363,7 @@ When providing custom content for the warning dialog you must use certain classe
 ---
 
 ### Lock Screen Content
-When providing custom content for the lock screen you must use certain classes and element ids to ensure proper function.
-Additionally the display property for the primary parent element (`jitp-lock-display`) should be set to none: `style="display: none;"`.
+When providing custom content for the lock screen you must use the following classes and element ids to ensure proper function:
 
 | Element Id or Class           | Element Type   | Description                                    |
 |:------------------------------|:---------------|:-----------------------------------------------|
@@ -376,6 +374,8 @@ Additionally the display property for the primary parent element (`jitp-lock-dis
 | id="jitp-lock-pass"           | input-password | User password field                            |
 | id="jitp-lock-unlock"         | button         | UnLock button                                  |
 | id="jitp-lock-logout"         | button/anchor  | Logout button                                  |
+
+Additionally the display property for the primary parent element (`jitp-lock-display`) should be set to none: `style="display: none;"`.
 
 #### Bootstrap
 ```
@@ -434,15 +434,15 @@ IdleTimeoutPlus.start({
 ## <a name="special"></a>Special Situations
 
 ### Multiple Window/Tab support
-With `multiWindowSupport` set to true IdleTimeoutPlus will sync your timeout and logout events across all your clients browser windows & tabs that meet the [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy).
+With `multiWindowSupport` set to true IdleTimeoutPlus will sync your timeout and logout events across all your client's browser windows & tabs that meet the [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy).
 Multi-window/tab support is dependent upon [jQuery Storage API](https://github.com/julien-maurel/jQuery-Storage-API) as local storage is used to sync cross window events.  If jQuery Storage API is not found an error will be written to the console and the module will not initialize.
 
 * When multiple window support is enabled if the user opens a new window it is considered an activity event and the idle timer will be reset and any warning dialogs will be cleared.
-* Be sure to call `IdleTimeoutPlus.logout()` from your application's logout link/button instead of manually redirecting to your logout page.  If this is not done the other windows will not automatically logout.
-* If a lock screen is present, however, **opening a new window will NOT clear the lock screen**.  Instead, the new window will automatically be locked. For more details refer to the **Lock screen** section further down.
+* Be sure to call `IdleTimeoutPlus.logout()` from your application's logout link/button instead of manually redirecting to your logout page.  If this is not done other windows/tabs will not be automatically logged out.
+* If a lock screen is present, **opening a new window will NOT clear the lock screen**.  Instead, the new window will automatically be locked. For more details refer to the **Lock screen** section further down.
 
 ##### Initialization
-No special consideration for starting the plugin must be taken when using the `multiWindowSupport` option.
+No special consideration for configuring/starting the plugin is needed when using the `multiWindowSupport` option.
 ```
 jQuery(document).ready(function() {
     IdleTimeoutPlus.start({
@@ -466,17 +466,9 @@ Additionally, you will need to use the iframes distribution file:
 ```
 ### Lock screen support
 Enabling lock screen support provides a very nice feature for your users but also introduces some security concerns.  Primarily, it is important to realize that anyone familiar with Firebug or Chrome's developer's tools can easily bypass the lock screen.
-**Do NOT rely upon this feature to provide hardened security.**  That being said it provides some flexibility between having a user loosing all their form progress after 15min of inactivity and the alternative of keeping the screen unsecured for two hours.
+Therefore, **Do NOT rely upon this feature to provide hardened security.**  That being said using a lock screen offers some flexibility between having a user loosing all their form progress after 15min of inactivity and the alternative of keeping the screen unsecured for two hours.
 
 ##### Initialization
-**Login Screen**
-You **need to call** the `cleanUpLockScreen()` function on your login screen to prevent the user from accidentally receiving a lock screen the moment they login (and subsequently being immediately logged out).
-```
-jQuery(document).ready(function() {
-    IdleTimeoutPlus.cleanUpLockScreen();
-});
-```
-**Application Screens**
 To use the lock screen you must 1) Enable the lock screen, 2) Enable multi-window support, 3) Set the lockPassCallback function (if using the internal lock screen feature) 
 ```
 jQuery(document).ready(function() {
@@ -487,9 +479,23 @@ jQuery(document).ready(function() {
     });
 });
 ```
+On your login screen you will **need to call** the `cleanUpLockScreen()` function to prevent the user from accidentally receiving a lock screen the moment they login (and subsequently being immediately logged out).
+```
+jQuery(document).ready(function() {
+    IdleTimeoutPlus.cleanUpLockScreen();
+});
+```
 
-## License
-Creative Commons Attribution-ShareAlike 4.0 International
+## About
+
+### Bugs or feature requests
+Found a problem or would like a feature submit it via [GitHub](https://github.com/LinearSoft/jquery-idleTimeout-plus/issues)
+### License
+jquery-idleTimeout plus is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License
 
 * [Human-readable](http://creativecommons.org/licenses/by-sa/4.0/)
 * [Full License](http://creativecommons.org/licenses/by-sa/4.0/legalcode)
+
+### Acknowledgements
+
+Both [Jill Elaine's jquery-idleTimeout](https://github.com/josebalius/jquery-idleTimeout) and [Orangehill's bootstrap-session-timeout](https://github.com/orangehill/bootstrap-session-timeout) have been used as foundations for this jQuery module.
