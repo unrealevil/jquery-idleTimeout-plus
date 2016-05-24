@@ -487,3 +487,9 @@ jQuery(document).ready(function() {
     });
 });
 ```
+
+## License
+Creative Commons Attribution-ShareAlike 4.0 International
+
+* [Human-readable](http://creativecommons.org/licenses/by-sa/4.0/)
+* [Full License](http://creativecommons.org/licenses/by-sa/4.0/legalcode)
