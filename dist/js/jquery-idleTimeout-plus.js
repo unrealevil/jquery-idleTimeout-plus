@@ -639,6 +639,7 @@
 
         stopLockTimer();
         closeLockScreen();
+        $('#jitp-lock-pass').val(''); //Don't want the password to stay in the field
         if(config.keepAliveInterval) startKeepSessionAlive();
         storeData('lockStartTime',-1);
         initIdle();
@@ -876,7 +877,8 @@
         }
         var hoursLeft = Math.floor(minLeft/60);
         minLeft %= 60;
-        if(minLeft <= 15 || minLeft >52) return 'about '+hoursLeft+' hours';
+        if(minLeft <= 15) return 'about '+hoursLeft+' hours';
+        if(minLeft > 52) return 'about '+(hoursLeft+1)+' hours';
         return 'about '+hoursLeft+'&frac12; hours';
     }
 
