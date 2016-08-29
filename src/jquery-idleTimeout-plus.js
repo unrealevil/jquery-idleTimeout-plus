@@ -53,7 +53,7 @@
         warnTitle:              'Session Timeout',                  // setting to null will remove the title bar
         warnMessage:            'Your session is about to expire!',
         warnStayAliveButton:    'Stay Connected',
-        warnLogoutButton:       'Logout',
+        warnLogoutButton:       'Logout',                           //Set to null to disable
         warnCountdownMessage:   'Time remaining: {timer}',          //Set to null to disable see doc on how to set
         warnCountdownBar:       false,
 
@@ -509,9 +509,11 @@
     function createWarningBootstrap(content) {
         console.log('createWarningBootstrap called');
         bodyElm.append(content);
-        $('#jitp-warn-logout').on('click', function() {
-            onWarningLogoutButton();
-        });
+        if(config.warnLogoutButton != null) {
+            $('#jitp-warn-logout').on('click', function() {
+                onWarningLogoutButton();
+            });
+        }
         $('#jitp-warn-alive').on('click', function() {
             onStayAliveButton();
         });
@@ -529,21 +531,24 @@
 
     function createWarningJquery(content) {
         console.log('createWarningJquery called');
-        $(content).dialog({
-            buttons: [
-                {
-                    text: config.warnLogoutButton,
-                    click: function () {
-                        onWarningLogoutButton();
-                    }
-                },
-                {
-                    text: config.warnStayAliveButton,
-                    click: function () {
-                        onStayAliveButton();
-                    }
+        var theButtons = [];
+        if(config.warnLogoutButton != null) {
+            theButtons.push({
+                text: config.warnLogoutButton,
+                click: function () {
+                    onWarningLogoutButton();
                 }
-            ],
+            });
+        }
+        theButtons.push({
+            text: config.warnStayAliveButton,
+            click: function () {
+                onStayAliveButton();
+            }
+        });
+
+        $(content).dialog({
+            buttons: theButtons,
             closeOnEscape: false,
             modal: true,
             title: config.warnTitle,
@@ -579,6 +584,9 @@
         var countdownMsg = config.warnCountdownMessage != null ?
         '<p>' + config.warnCountdownMessage.replace(/{timer}/g, '<span class="jitp-countdown-holder"></span>') + '</p>'
             : '';
+        var logoutBtn = config.warnLogoutButton != null ?
+        '<button id="jitp-warn-logout" type="button" class="btn btn-default">' + config.warnLogoutButton + '</button>'
+            : '';
         var countdownBar = config.warnCountdownBar ?
             '<div class="progress"> \
               <div id="jitp-warn-bar" class="progress-bar progress-bar-striped active" role="progressbar" style="min-width: 15px; width: 100%;"> \
@@ -597,7 +605,7 @@
                             ' + countdownBar + ' \
                         </div> \
                         <div class="modal-footer"> \
-                            <button id="jitp-warn-logout" type="button" class="btn btn-default">' + config.warnLogoutButton + '</button> \
+                            ' + logoutBtn + ' \
                             <button id="jitp-warn-alive" type="button" class="btn btn-primary">' + config.warnStayAliveButton + '</button> \
                         </div> \
                     </div> \

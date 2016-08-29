@@ -1,7 +1,7 @@
 {
   "name": "jquery-idleTimeout-plus",
   "description": "User idle detector with session keep-alive, warning dialog, lock screen, url redirection and support for multiple windows and tabs.",
-  "version": "0.9.3",
+  "version": "0.9.5",
   "main": "dist/jquery-idleTimeout-plus.js",
   "authors": [
     "Jason Abraham",
@@ -45,7 +45,8 @@
     "src",
     "gulpfile.js",
     "test",
-    "tests"
+    "tests",
+    ".idea"
   ],
   "dependencies": {
     "jquery": "1.7.0 - 2"
