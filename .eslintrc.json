@@ -1,0 +1,35 @@
+{
+  "extends": "google",
+  "rules": {
+    "key-spacing": ["warn", {
+      "align": "value"
+    }],
+    "spaced-comment": ["off"],
+    "max-len": ["error", {
+      "code": 120,
+      "ignoreComments": true,
+      "ignoreTrailingComments": true
+    }],
+    "require-jsdoc": ["error", {
+      "require": {
+        "FunctionDeclaration": false, //Eventually this will be completed
+        "MethodDefinition": false,
+        "ClassDeclaration": false
+      }
+    }],
+    "wrap-iife": ["off"]
+  },
+  "globals": {
+    "define": false,
+    "$": false,
+    "window": false,
+    "document": false,
+    "jQuery": false
+  }
+}
+
+
+//,
+//"operator-linebreak": ["error", "after", {
+//"overrides": { "?": "ignore", ":": "ignore" }
+//}]
