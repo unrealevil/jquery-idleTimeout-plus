@@ -501,10 +501,10 @@
             content = config.warnContentCallback(config);
         } else {
             if (config.bootstrap)content = getWarningContentBootstrap();
-            else content = getWarningContentJquery();
+            else content = getWarningContentJqueryUI();
         }
         if(config.bootstrap) createWarningBootstrap(content);
-        else createWarningJquery(content);
+        else createWarningJqueryUI(content);
     }
 
     function createWarningBootstrap(content) {
@@ -530,7 +530,7 @@
 
     }
 
-    function createWarningJquery(content) {
+    function createWarningJqueryUI(content) {
         console.log('createWarningJquery called');
         var theButtons = [];
         if(config.warnLogoutButton != null) {
@@ -615,7 +615,7 @@
         );
     }
 
-    function getWarningContentJquery() {
+    function getWarningContentJqueryUI() {
         console.log('getWarningContentJquery called');
         var countdownMsg = config.warnCountdownMessage != null?
         '<p>' + config.warnCountdownMessage.replace(/{timer}/g, '<span class="jitp-countdown-holder"></span>') + '</p>'
@@ -749,7 +749,7 @@
             content = config.lockContentCallback(config);
         } else {
             if (config.bootstrap)content = getLockContentBootstrap();
-            else content = getLockContentJquery();
+            else content = getLockContentJqueryUI();
         }
         bodyElm.append(content);
         lockScreenElm = $('#jitp-lock-display');
@@ -806,7 +806,7 @@
         );
     }
 
-    function getLockContentJquery() {
+    function getLockContentJqueryUI() {
         var title = config.lockTitle !== null ?
         '<header>' + config.lockTitle + '</header>'
             : '';
