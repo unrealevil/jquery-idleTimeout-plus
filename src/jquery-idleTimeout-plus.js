@@ -454,6 +454,7 @@
         updateWarningDialog();
         if(config.bootstrap) {
             warningDialogElm.modal('show');
+            warningDialogElm.focus();
         } else {
             warningDialogElm.dialog('open');
         }
