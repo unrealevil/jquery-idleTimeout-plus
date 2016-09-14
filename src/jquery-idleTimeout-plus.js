@@ -596,7 +596,7 @@
             </div>'
             : '';
         return (
-            '<div class="modal fade" id="jitp-warn-display" data-backdrop="static" data-keyboard="false"> \
+            '<div class="modal fade" id="jitp-warn-display" data-backdrop="static" data-keyboard="false" tabindex="-1"> \
                 <div class="modal-dialog"> \
                     <div class="modal-content"> \
                          ' + title + ' \
