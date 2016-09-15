@@ -21,15 +21,7 @@
   },
   "globals": {
     "define": false,
-    "$": false,
     "window": false,
-    "document": false,
-    "jQuery": false
+    "document": false
   }
 }
-
-
-//,
-//"operator-linebreak": ["error", "after", {
-//"overrides": { "?": "ignore", ":": "ignore" }
-//}]

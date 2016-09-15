@@ -21,13 +21,16 @@
  *
  * version 0.5.0
  **/
+
 (function(root, factory) {
+  /** @namespace define.amd */
+  /** @namespace root.jQuery */
   if (typeof define === 'function' && define.amd) {
     define(['jquery'], factory);
   } else if (typeof exports === 'object') {
     module.exports = factory(require('jquery'));
   } else {
-    root.IdleTimeoutPlus = factory(root.$);
+    root.IdleTimeoutPlus = factory(root.jQuery);
   }
 }(this, function($) {
   console.log('jitp: library load');
@@ -40,9 +43,8 @@
     idleTimeLimit:      1200,                             // 'No activity' time limit in seconds. 1200 = 20 Minutes
     idleCallback:       false,                            // Called when the idleTimer is started (you can use this to close your custom warn/lock screens if needed)
     idleCheckHeartbeat: 2,                                // Frequency to check for idle timeouts in seconds
-    activityEvents:     'click keypress scroll wheel ' +  // configure which activity events to detect separate each event with a space, set to false for none
-                        'mousewheel mousemove touchmove',
     bootstrap:          false,                            // Use bootstrap framework instead of jQuery
+    activityEvents:     'click keypress scroll wheel mousewheel mousemove touchmove',  // configure which activity events to detect separate each event with a space, set to false for none
 
     // Warning settings
     warnEnabled:          true,                               // set to false to skip warning period
@@ -582,7 +584,7 @@
     var title = config.warnTitle === null ? '' :
     '<div class="modal-header"><h4 class="modal-title">' + config.warnTitle + '</h4></div>';
     var countdownMsg = config.warnCountdownMessage === null ? '' :
-      '<p>' + config.warnCountdownMessage.replace(/{timer}/g, '<span class="jitp-countdown-holder"></span>') + '</p>';
+      '<p>' + config.warnCountdownMessage.replace(/\{timer}/g, '<span class="jitp-countdown-holder"></span>') + '</p>';
     var logoutBtn = config.warnLogoutButton === null ? '' :
       '<button id="jitp-warn-logout" type="button" class="btn btn-default">' + config.warnLogoutButton + '</button>';
     var countdownBar = config.warnCountdownBar === null ? '' :
@@ -616,7 +618,7 @@
   function getWarningContentJqueryUI() {
     console.log('getWarningContentJquery called');
     var countdownMsg = config.warnCountdownMessage === null ? '' :
-      '<p>' + config.warnCountdownMessage.replace(/{timer}/g, '<span class="jitp-countdown-holder"></span>') + '</p>';
+      '<p>' + config.warnCountdownMessage.replace(/\{timer}/g, '<span class="jitp-countdown-holder"></span>') + '</p>';
     var countdownBar = config.warnCountdownBar === null ? '' :
       '<div id="jitp-warn-bar"></div>';
     return (
@@ -759,6 +761,7 @@
       onUnlockButton();
     });
 
+    //noinspection JSJQueryEfficiency
     if ($('#jitp-lock-form').length) {
       $('#jitp-lock-form').submit(function() {
         onUnlockButton();
@@ -773,10 +776,10 @@
     console.log('getLockContentBootstrap called');
     var title = config.lockTitle === null ? '' :
       '<div class="panel-heading"><h2 class="panel-title">' + config.lockTitle + '</h2></div>';
-    var logoutMsg = config.lockLogoutButton.replace(/{username}/g, config.lockUsername);
+    var logoutMsg = config.lockLogoutButton.replace(/\{username}/g, config.lockUsername);
     var countdownMsg = config.lockCountdownMessage === null ? '' :
       '<div class="panel-footer">' +
-        config.lockCountdownMessage.replace(/{timer}/g, '<span class="jitp-countdown-holder"></span>') +
+        config.lockCountdownMessage.replace(/\{timer}/g, '<span class="jitp-countdown-holder"></span>') +
       '</div>';
 
     return (
@@ -804,9 +807,9 @@
   function getLockContentJqueryUI() {
     var title = config.lockTitle === null ? '' :
       '<header>' + config.lockTitle + '</header>';
-    var logoutMsg = config.lockLogoutButton.replace(/{username}/g, config.lockUsername);
+    var logoutMsg = config.lockLogoutButton.replace(/\{username}/g, config.lockUsername);
     var countdownMsg = config.lockCountdownMessage === null ? '' :
-      '<footer>' + config.lockCountdownMessage.replace(/{timer}/g, '<span class="jitp-countdown-holder"></span>') +
+      '<footer>' + config.lockCountdownMessage.replace(/\{timer}/g, '<span class="jitp-countdown-holder"></span>') +
       '</footer>';
 
     return (
@@ -1020,3 +1023,4 @@
 
   return api;
 }));
+
