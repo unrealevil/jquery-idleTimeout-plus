@@ -21,15 +21,15 @@
  *
  * version 0.5.0
  **/
-;(function(root, factory) {
+(function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(['jquery'], factory);
   } else if (typeof exports === 'object') {
     module.exports = factory(require('jquery'));
   } else {
-    root.IdleTimeoutPlus = factory(root.jQuery);
+    root.IdleTimeoutPlus = factory(root.$);
   }
-}(this, function(jquery) {
+}(this, function($) {
   console.log('jitp: library load');
 
   //#########################################################################
@@ -145,7 +145,7 @@
         }
       } else {
         // eslint-disable-next-line no-lonely-if
-        if (typeof jQuery.ui === 'undefined') {
+        if (typeof $.ui === 'undefined') {
           console.error('jitp: jQueryUI library is unavailable');
           return false;
         }
