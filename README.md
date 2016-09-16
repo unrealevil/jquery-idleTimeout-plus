@@ -59,6 +59,8 @@ jQuery(document).ready(function() {
 | warnTimeLimit |  int   | 180 (3min)                       | warning timeout in seconds    |
 | warnMessage   | string | Your session is about to expire! | warning dialog message        |
 | redirectUrl   | string | /timed-out                       | Redirect URL for user timeout |
+| multiWindowSupport     |  bool  | false                            | Support multiple tabs/windows (jquery&#8209;storage&#8209;api&nbsp;required)              |
+
 
 ### Detailed Options
 
