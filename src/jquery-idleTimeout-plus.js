@@ -205,7 +205,8 @@
   };
 
   /**
-   * Call this on your login screen to avert a lock screen bug
+   * @name cleanUpLockScreen
+   * @description Call this on your login screen to avert a lock screen bug
    */
   api.cleanUpLockScreen = function() {
     console.log('manual cleanUpLockScreen');
@@ -214,7 +215,8 @@
   };
 
   /**
-   * Call this to cause a logout of all windows
+   * @name logout
+   * @description Call this to cause a logout of all windows
    */
   api.logout = function() {
     console.log('manual logout');
@@ -222,7 +224,8 @@
   };
 
   /**
-   * Displays the warning dialog (meant to be used by your warnCallback function)
+   * @name displayWarning
+   * @description Displays the warning dialog (meant to be used by your warnCallback function)
    */
   api.displayWarning = function() {
     console.log('displayWarning called');
@@ -230,7 +233,8 @@
   };
 
   /**
-   * Displays the lock screen (meant to be used by your lockCallback function)
+   * @name displayLockScreen
+   * @description Displays the lock screen (meant to be used by your lockCallback function)
    */
   api.displayLockScreen = function() {
     console.log('displayLockScreen called');
@@ -238,13 +242,56 @@
   };
 
   /**
-   * Initiates the full lock screen procedure (use this if you wish to lock immediately)
+   * @name initLockScreen
+   * @description Initiates the full lock screen procedure (use this if you wish to lock immediately)
    */
   api.initLockScreen = function() {
     console.log('displayLockScreen called');
     stopIdleTimer();
     stopWarningTimer();
     initLock();
+  };
+
+  /**
+   * @name setIdleTimeLimit
+   * @param {number} seconds - New value for idleTimeLimit
+   * @description Updates the idleTimeLimit config value & calls api.rollback
+   */
+  api.setIdleTimeLimit = function(seconds) {
+    console.log('setIdleTimeLimit called');
+    if (typeof seconds === 'number') {
+      console.log('Updating idleTimeLimit from ' + config.idleTimeLimit / 1000 + ' to ' + seconds);
+      config.idleTimeLimit = seconds * 1000;
+      api.rollback();
+    }
+  };
+
+  /**
+   * @name setWarnTimeLimit
+   * @param {number} seconds - New value for warnTimeLimit
+   * @description Updates the warnTimeLimit config value & calls api.rollback
+   */
+  api.setWarnTimeLimit = function(seconds) {
+    console.log('setWarnTimeLimit called');
+    if (typeof seconds === 'number') {
+      console.log('Updating warnTimeLimit from ' + config.warnTimeLimit / 1000 + ' to ' + seconds);
+      config.warnTimeLimit = seconds * 1000;
+      api.rollback();
+    }
+  };
+
+  /**
+   * @name setLockTimeLimit
+   * @param {number} seconds - New value for lockTimeLimit
+   * @description Updates the lockTimeLimit config value & calls api.rollback
+   */
+  api.setLockTimeLimit = function(seconds) {
+    console.log('setLockTimeLimit called');
+    if (typeof seconds === 'number') {
+      console.log('Updating lockTimeLimit from ' + config.lockTimeLimit / 1000 + ' to ' + seconds);
+      config.lockTimeLimit = seconds * 1000;
+      api.rollback();
+    }
   };
 
   /**
