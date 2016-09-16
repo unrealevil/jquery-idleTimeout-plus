@@ -34,8 +34,8 @@ Adding to your website
 
 ### Dependencies
 
-* jQuery +1.7
-* jQuery UI +1.9 or Bootstrap 3
+* jQuery +2.2
+* jQuery UI +1.11 or Bootstrap +3.3
 * [jQuery Storage API](https://github.com/julien-maurel/jQuery-Storage-API) (for iFrame or Multi-window support)
 * [jQuery BlockUI](http://jquery.malsup.com/block/) (for lock screen support)
 
