@@ -493,10 +493,7 @@ jQuery(document).ready(function() {
 ### Bugs or feature requests
 Found a problem or would like a feature submit it via [GitHub](https://github.com/LinearSoft/jquery-idleTimeout-plus/issues)
 ### License
-jquery-idleTimeout plus is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License
-
-* [Human-readable](http://creativecommons.org/licenses/by-sa/4.0/)
-* [Full License](http://creativecommons.org/licenses/by-sa/4.0/legalcode)
+jquery-idleTimeout plus is licensed under the [GNU General Public License Version 3](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
 
 ### Acknowledgements
 

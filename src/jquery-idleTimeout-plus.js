@@ -1,11 +1,7 @@
 /**
- * This work is licensed under the Creative Commons Attribution-Share Alike 3.0
- * United States License. To view a copy of this license,
- * visit http://creativecommons.org/licenses/by-sa/3.0/us/ or send a letter
- * to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- *
- * Modified by: Jason Abraham (CrashSensei)
+ * Written by: Jason Abraham (CrashSensei)
  * Email: jason@linearsoft.com
+ * License: GPLv3 (https://www.gnu.org/licenses/gpl-3.0-standalone.html)
  *
  * Configurable idle (no activity) timer and logout redirect for jQuery.
  * Supports both jQueryUI dialogs or Bootstrap modals
@@ -19,7 +15,7 @@
  *      Multi-window support requires JQuery Storage API
  *      Dialogs require either jQueryUI or Bootstrap
  *
- * version 0.5.0
+ * version 0.9.5
  **/
 
 (function(root, factory) {
