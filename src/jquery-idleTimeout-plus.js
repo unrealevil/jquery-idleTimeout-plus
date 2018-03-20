@@ -67,8 +67,8 @@
     keepAliveUrl:      window.location.href,  // set URL to ping - does not apply if keepAliveInterval: false
     keepAliveAjaxType: 'GET',
     keepAliveAjaxData: '',
-    keepAliveResponse: 'OK',                  // add ability to check keep alive's response. if user was logged out by other means, or something went wrong, redirect to keepAliveBadUrl - Set to false to disable KeepAliveBadUrl redirection
-    keepAliveBadUrl:    window.location.href,  // set URL to redirect to if keepAliveResponse wasnt what was expected and if keepAliveResponse isn't set to false
+    keepAliveResponse: false,                  // add ability to check keep alive's response. if user was logged out by other means, or something went wrong, redirect to keepAliveBadUrl - Set to false to disable KeepAliveBadUrl redirection
+    keepAliveBadUrl:    window.location.href,  // set URL to redirect to if keepAliveResponse wasn't what was expected and if keepAliveResponse isn't set to false
     
     // Lock Screen settings
     lockEnabled:          false,                      // Set to true to enable lock screen before redirecting
@@ -425,7 +425,7 @@
         url:  config.keepAliveUrl,
         data: config.keepAliveAjaxData,
         success: function(response){
-                if($.trim(response) !== config.keepAliveResponse && config.keepAliveResponse !== false){
+                if(config.keepAliveResponse !== false && $.trim(response) !== config.keepAliveResponse){
                         window.location.replace(config.keepAliveBadUrl);
                 }
         }
