@@ -84,7 +84,8 @@
 
     // Extensions
 
-    multiWindowSupport: false   // Requires js-storage
+    multiWindowSupport: false,   // Requires js-storage,
+    storage: null
   };
   var bodyElm = $('body'); // Store for jQuery optimization
   var dataStore = null;
@@ -110,7 +111,7 @@
     config.keepAliveInterval *= 1000;
     //--Validate config options
     if (config.multiWindowSupport) {
-      if (!Storages.localStorage) {
+      if (!config.storage) {
         console.error('jitp: Multi-Window support requested but JS Storage is unavailable.');
         return false;
       }
@@ -172,7 +173,7 @@
    */
   api.cleanUpLockScreen = function() {
     initDataStore();
-    if (Storages.localStorage) dataStore.set('lockStartTime', -99); //Because settings are not initialized bypass storeData
+    if (config.storage) dataStore.set('lockStartTime', -99); //Because settings are not initialized bypass storeData
   };
   /**
    * @name logout
@@ -250,7 +251,7 @@
 
   function initDataStore() {
     if (dataStore !== null) return;
-    if (Storages.localStorage) dataStore = (Storages.initNamespaceStorage('jqueryIdleTimeoutPlus')).localStorage;
+    if (config.storage) dataStore = (config.storage.initNamespaceStorage('jqueryIdleTimeoutPlus')).localStorage;
     else dataStore = {};
   }
   function storeData(key, value) {
