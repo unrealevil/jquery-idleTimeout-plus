@@ -69,7 +69,7 @@
     keepAliveAjaxData: '',
     keepAliveResponse: false,                  // add ability to check keep alive's response. if user was logged out by other means, or something went wrong, redirect to keepAliveBadUrl - Set to false to disable KeepAliveBadUrl redirection
     keepAliveBadUrl:    window.location.href,  // set URL to redirect to if keepAliveResponse wasn't what was expected and if keepAliveResponse isn't set to false
-    
+
     // Lock Screen settings
     lockEnabled:          false,                      // Set to true to enable lock screen before redirecting
     lockTimeLimit:        7200,                       // 2 hrs
@@ -88,7 +88,8 @@
 
     // Extensions
     iframesSupport:     false,  // Enable iframe support (also requires multiWindow support to work) /* --strip_iframe-- */
-    multiWindowSupport: false   // Requires jquery-storage-api
+    multiWindowSupport: false,   // Requires js-storage,
+    storage: null
   };
 
   /* --strip_testing_begin-- */
@@ -131,8 +132,8 @@
 
     //--Validate config options
     if (config.multiWindowSupport) {
-      if (!$.localStorage) {
-        console.error('jitp: Multi-Window support requested but JQuery Storage API is unavailable.');
+      if (!config.storage) {
+        console.error('jitp: Multi-Window support requested but JS Storage is unavailable.');
         return false;
       }
     }
@@ -209,7 +210,7 @@
   api.cleanUpLockScreen = function() {
     console.log('manual cleanUpLockScreen');
     initDataStore();
-    if ($.localStorage) dataStore.set('lockStartTime', -99); //Because settings are not initialized bypass storeData
+    if (config.storage) dataStore.set('lockStartTime', -99); //Because settings are not initialized bypass storeData
   };
 
   /**
@@ -318,7 +319,7 @@
   function initDataStore() {
     console.log('start initDataStore');
     if (dataStore !== null) return;
-    if ($.localStorage) dataStore = ($.initNamespaceStorage('jqueryIdleTimeoutPlus')).localStorage;
+    if (config.storage) dataStore = (config.storage.initNamespaceStorage('jqueryIdleTimeoutPlus')).localStorage;
     else dataStore = {};
   }
 

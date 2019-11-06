@@ -7,13 +7,15 @@ var replace = require('gulp-replace');
 var uglify = require('gulp-uglify');
 var del = require('del');
 var cleanCSS = require('gulp-clean-css');
+var once = require('async-once');
 
-gulp.task('clean', function() {
+gulp.task('clean', once(function(done) {
   del('dist/js/*');
-  return del('dist/css/*');
-});
+  del('dist/css/*');
+  return done();
+}));
 
-gulp.task('standard', ['clean'], function() {
+gulp.task('standard', gulp.series('clean', function() {
   return gulp.src(['src/jquery-idleTimeout-plus.js'])
     .pipe(stripCode({
       start_comment: '--strip_testing_begin--',
@@ -33,9 +35,9 @@ gulp.task('standard', ['clean'], function() {
     .pipe(replace(/({|;)\s*\n\n+(\s*)/g,'$1\n$2'))
     .pipe(replace(/({|;)(\s+.*)\n\n+(\s*)/g,'$1$2\n$3'))
     .pipe(gulp.dest('dist/js'));
-});
+}));
 
-gulp.task('iframe', ['clean', 'standard'], function() {
+gulp.task('iframe', gulp.series('clean', 'standard', function() {
   return gulp.src(['src/jquery-idleTimeout-plus.js'])
     .pipe(stripCode({
       start_comment: '--strip_testing_begin--',
@@ -53,25 +55,27 @@ gulp.task('iframe', ['clean', 'standard'], function() {
     .pipe(replace(/({|;)(\s+.*)\n\n+(\s*)/g,'$1$2\n$3'))
     .pipe(rename('jquery-idleTimeout-plus-iframe.js'))
     .pipe(gulp.dest('dist/js'));
-});
+}));
 
-gulp.task('mini', ['clean', 'standard', 'iframe'], function() {
+gulp.task('mini', gulp.series('clean', 'standard', 'iframe', function() {
   return gulp.src(['dist/js/*.js'])
     .pipe(uglify())
     .pipe(rename({suffix: ".min"}))
     .pipe(gulp.dest('dist/js'))
-});
+}));
 
-gulp.task('css', ['clean'], function() {
+gulp.task('css', gulp.series('clean', function() {
   return gulp.src(['src/*.css'])
     .pipe(gulp.dest('dist/css'))
-});
+}));
 
-gulp.task('minicss', ['clean', 'css'], function() {
+gulp.task('minicss', gulp.series('clean', 'css', function() {
   return gulp.src(['dist/css/*.css'])
     .pipe(cleanCSS())
     .pipe(rename({suffix: ".min"}))
     .pipe(gulp.dest('dist/css'))
-});
+}));
 
-gulp.task('default', ['clean', 'standard', 'iframe', 'mini', 'css', 'minicss']);
+gulp.task('default', gulp.series('clean', 'standard', 'iframe', 'mini', 'css', 'minicss', function (done) {
+  done();
+}));

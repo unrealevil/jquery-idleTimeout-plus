@@ -35,7 +35,7 @@
     "del": "^2.2.0",
     "eslint": "^3.5.0",
     "eslint-config-google": "^0.6.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0",
     "gulp-clean-css": "^2.0.7",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
@@ -44,7 +44,8 @@
     "gulp-uglify": "^1.5.3",
     "bootstrap": "^3.3",
     "block-ui": "^2.70",
-    "jquery-storage-api": "^1.9",
+    "js-storage": "^1.1",
+    "async-once": "^1.0.1",
     "jquery-ui": "^1.12"
   },
   "dependencies": {
