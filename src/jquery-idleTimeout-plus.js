@@ -57,7 +57,7 @@
     // Auto-Url settings              (NOTE: if a callback is defined auto url redirection will only occur if the callback returns true)
     redirectUrl:        '/timed-out', // URL if no action is taken after the warning/lock screen timeout
     logoutUrl:          '/logout',    // URL if the user clicks "Logout" on the warning/lock screen
-    logoutAutoUrl:      'null',       // URL for secondary tabs that received an automatic logout trigger (to help avoid race conditions)
+    logoutAutoUrl:      null,       // URL for secondary tabs that received an automatic logout trigger (to help avoid race conditions)
     redirectCallback:   false,
     logoutCallback:     false,
     logoutAutoCallback: false,
@@ -67,7 +67,9 @@
     keepAliveUrl:      window.location.href,  // set URL to ping - does not apply if keepAliveInterval: false
     keepAliveAjaxType: 'GET',
     keepAliveAjaxData: '',
-
+    keepAliveResponse: false,                  // add ability to check keep alive's response. if user was logged out by other means, or something went wrong, redirect to keepAliveBadUrl - Set to false to disable KeepAliveBadUrl redirection
+    keepAliveBadUrl:    window.location.href,  // set URL to redirect to if keepAliveResponse wasn't what was expected and if keepAliveResponse isn't set to false
+    
     // Lock Screen settings
     lockEnabled:          false,                      // Set to true to enable lock screen before redirecting
     lockTimeLimit:        7200,                       // 2 hrs
@@ -119,7 +121,7 @@
     config = $.extend(config, userConfig);
     config = $.extend(config, testingConfig, userConfig); /* --strip_testing-- */
 
-    if (config.logoutAutoUrl === null) config.logoutAutoUrl = config.logoutUrl;
+    if (config.logoutAutoUrl == null) config.logoutAutoUrl = config.logoutUrl;
     //--Convert secs to millisecs
     config.idleTimeLimit *= 1000;
     config.idleCheckHeartbeat *= 1000;
@@ -421,7 +423,12 @@
       $.ajax({
         type: config.keepAliveAjaxType,
         url:  config.keepAliveUrl,
-        data: config.keepAliveAjaxData
+        data: config.keepAliveAjaxData,
+        success: function(response){
+                if(config.keepAliveResponse !== false && $.trim(response) !== config.keepAliveResponse){
+                        window.location.replace(config.keepAliveBadUrl);
+                }
+        }
       });
     }, config.keepAliveInterval);
   }
